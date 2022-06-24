@@ -1,0 +1,30 @@
+{
+  "name": "gggaspy-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "src/commands/test/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/z1tta/GGGaspy-bot.git"
+  },
+  "author": "Zitta#3759 (488912326179946497)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/z1tta/GGGaspy-bot/issues"
+  },
+  "homepage": "https://github.com/z1tta/GGGaspy-bot#readme",
+  "dependencies": {
+    "@discordjs/builders": "^0.15.0",
+    "@discordjs/rest": "^0.5.0",
+    "@haileybot/captcha-generator": "^1.7.0",
+    "discord.js": "^13.8.0",
+    "dotenv": "^16.0.1",
+    "glob": "^7.2.0",
+    "moment": "^2.29.3",
+    "moment-duration-format": "^2.3.2",
+    "sqlite3": "^5.0.8"
+  }
+}
