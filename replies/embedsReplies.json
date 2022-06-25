@@ -1,0 +1,96 @@
+{
+  "noPerm": {
+    "title": "You don't have the permission to run this command",
+    "color": "RED"
+  },
+  "userNotMentionned": {
+    "title": "Please mention a valid member",
+    "color": "RED"
+  },
+  "cantFindUser": {
+    "title": "I can't find this user",
+    "color": "RED"
+  },
+  "successBan": {
+    "title": "Successfully banned : ",
+    "description": "Reason: ",
+    "color": "GREEN"
+  },
+  "missingHighestRole": {
+    "title": "There's an error, please look if the role of the bot is higher than this user",
+    "color": "RED"
+  },
+  "userIdNotMentionned": {
+    "title": "Please mention a valid user id",
+    "color": "RED"
+  },
+  "successUnban": {
+    "title": "Successfully unbanned : ",
+    "description": "Reason: ",
+    "color": "GREEN"
+  },
+  "invalidDuration": {
+    "title": "Please enter a valid duration",
+    "color": "RED"
+  },
+  "durationMissing": {
+    "title": "Please enter a duration",
+    "color": "RED"
+  },
+  "successTimeout": {
+    "title": "Successfully timeout : ",
+    "description": "Reason: ",
+    "color": "GREEN"
+  },
+  "userNotInTimeout": {
+    "title": "This user is not in timeout",
+    "color": "RED"
+  },
+  "successUntimeout": {
+    "title": "Successfully untimeout : ",
+    "description": "Reason: ",
+    "color": "GREEN"
+  },
+  "successLock": {
+    "title": "Successfully locked this channel",
+    "color": "GREEN"
+  },
+  "successUnlock": {
+    "title": "Successfully unlocked this channel",
+    "color": "GREEN"
+  },
+  "roleNotMentionned": {
+    "title": "Please mention a valid role",
+    "color": "RED"
+  },
+  "successAddRole": {
+    "title": "Successfully added role :",
+    "description": " -> ",
+    "color": "GREEN"
+  },
+  "successRemoveRole": {
+    "title": "Successfully removed role :",
+    "description": " -> ",
+    "color": "GREEN"
+  },
+  "roleNameNotMentionned": {
+    "title": "Please mention a name for the role you want to create",
+    "color": "RED"
+  },
+  "successCreateRole": {
+    "title": "Successfully created role :",
+    "color": "GREEN"
+  },
+  "successDeleteRole": {
+    "title": "Successfully deleted role :",
+    "color": "GREEN"
+  },
+  "isInCooldown": {
+    "title": "You're in cooldown, please wait ",
+    "color": "RED"
+  },
+  "successSetCooldown": {
+    "title": "Successfully set cooldown :",
+    "color": "GREEN"
+  }
+}

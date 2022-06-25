@@ -1,0 +1,27 @@
+const { MessageEmbed } = require("discord.js");
+const replies = require("../../../replies/embedsReplies.json");
+
+module.exports = {
+  name: "",
+  description: "",
+  usage: "",
+  run: async (client, message, args) => {
+    
+    if (cooldown && !message.member.permissions.has("ADMINISTRATOR")) {
+      await new Promise((resolve, reject) =>
+        client.db.get(
+          `UPDATE "Users" SET "isInCooldown" = 'true' WHERE "id" = '${message.member.id}'`,
+          (err, row) => (err ? reject(err) : resolve(row))
+        )
+      );
+      setTimeout(async () => {
+        await new Promise((resolve, reject) =>
+          client.db.get(
+            `UPDATE "Users" SET "isInCooldown" = 'false' WHERE "id" = '${message.member.id}'`,
+            (err, row) => (err ? reject(err) : resolve(row))
+          )
+        );
+      }, cooldown);
+    }
+  },
+};

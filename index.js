@@ -20,7 +20,7 @@ client.db = new sqlite3.Database("database.db", (err) => {
   if (err) console.error(err);
 });
 
-[("CommandUtil", "EventUtil")].forEach((handler) => {
+["CommandUtil", "EventUtil"].forEach((handler) => {
   require(`./handlers/${handler}`)(client);
 });
 
