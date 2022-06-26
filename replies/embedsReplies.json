@@ -92,5 +92,31 @@
   "successSetCooldown": {
     "title": "Successfully set cooldown :",
     "color": "GREEN"
+  },
+  "successRemoveCooldown": {
+    "title": "Successfully removed cooldown :",
+    "color": "GREEN"
+  },
+  "cooldownIsSet": {
+    "title": "The cooldown is already set",
+    "color": "RED"
+  },
+  "cooldownIsNotSet": {
+    "title": "The cooldown is not set",
+    "color": "RED"
+  },
+  "successCmute": {
+    "title": "Successfully muted : ",
+    "description": "Reason: ",
+    "color": "GREEN"
+  },
+  "successCunmute": {
+    "title": "Successfully unmuted : ",
+    "description": "Reason: ",
+    "color": "GREEN"
+  },
+  "statusNotMentionned": {
+    "title": "Please indicate a valid status for the bot",
+    "color": "RED"
   }
 }

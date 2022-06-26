@@ -5,7 +5,7 @@ module.exports = {
   name: "unban",
   description: "Unban users",
   usage: `unban [userid] (reason)`,
-  run: async (client, message, args) => {
+  run: async (client, message, args, cooldown) => {
     const noPerm = new MessageEmbed()
       .setTitle(replies.noPerm.title)
       .setColor(replies.noPerm.color);

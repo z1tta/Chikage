@@ -5,7 +5,7 @@ module.exports = {
   name: "deleterole",
   description: "Deletes a role",
   usage: "deleterole [role]",
-  run: async (client, message, args) => {
+  run: async (client, message, args, cooldown) => {
     const noPerm = new MessageEmbed()
       .setTitle(replies.noPerm.title)
       .setColor(replies.noPerm.color);

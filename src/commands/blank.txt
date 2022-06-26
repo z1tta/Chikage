@@ -5,7 +5,7 @@ module.exports = {
   name: "",
   description: "",
   usage: "",
-  run: async (client, message, args) => {
+  run: async (client, message, args, cooldown) => {
     
     if (cooldown && !message.member.permissions.has("ADMINISTRATOR")) {
       await new Promise((resolve, reject) =>

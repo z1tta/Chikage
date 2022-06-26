@@ -1,15 +1,16 @@
 const { MessageEmbed } = require("discord.js");
+const ms = require("ms");
 const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
-  name: "ban",
-  description: "Ban members",
-  usage: `ban [member] (reason)`,
+  name: "cunmute",
+  description: "Unmutes a member in the current channel",
+  usage: "cunmute [member] (reason)",
   run: async (client, message, args, cooldown) => {
     const noPerm = new MessageEmbed()
       .setTitle(replies.noPerm.title)
       .setColor(replies.noPerm.color);
-    if (!message.member.permissions.has("BAN_MEMBERS"))
+    if (!message.member.permissions.has("MODERATE_MEMBERS"))
       return message.channel.send({ embeds: [noPerm] });
     const userNotMentionned = new MessageEmbed()
       .setTitle(replies.userNotMentionned.title)
@@ -28,21 +29,14 @@ module.exports = {
     args.forEach((arg) => {
       if (arg !== args[0]) reason = reason + arg + " ";
     });
-    try {
-      await user.ban({
-        reason: reason,
-      });
-    } catch (err) {
-      const missingHighestRole = new MessageEmbed()
-        .setTitle(replies.missingHighestRole.title)
-        .setColor(replies.missingHighestRole.color);
-      return message.channel.send({ embeds: [missingHighestRole] });
-    }
-    const successBan = new MessageEmbed()
-      .setTitle(`${replies.successBan.title}${user.user.tag} (${user.user.id})`)
-      .setDescription(`${replies.successBan.description}${reason}`)
-      .setColor(replies.successBan.color);
-    message.channel.send({ embeds: [successBan] });
+    await message.channel.permissionOverwrites.edit(user, {
+      SEND_MESSAGES: true,
+    });
+    const successCunmute = new MessageEmbed()
+      .setTitle(`${replies.successCunmute.title}${user.user.tag}`)
+      .setDescription(`${replies.successCunmute.description}${reason}`)
+      .setColor(replies.successCunmute.color);
+    await message.channel.send({ embeds: [successCunmute] });
     if (cooldown && !message.member.permissions.has("ADMINISTRATOR")) {
       await new Promise((resolve, reject) =>
         client.db.get(

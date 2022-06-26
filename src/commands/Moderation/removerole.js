@@ -5,7 +5,7 @@ module.exports = {
   name: "removerole",
   description: "Removes a role from a member",
   usage: "removerole [role] [member]",
-  run: async (client, message, args) => {
+  run: async (client, message, args, cooldown) => {
     const noPerm = new MessageEmbed()
       .setTitle(replies.noPerm.title)
       .setColor(replies.noPerm.color);

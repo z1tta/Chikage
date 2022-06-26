@@ -6,7 +6,7 @@ module.exports = {
   name: "timeout",
   description: "Sends a member into a timeout",
   usage: "timeout [member] [duration] (reason)",
-  run: async (client, message, args) => {
+  run: async (client, message, args, cooldown) => {
     const noPerm = new MessageEmbed()
       .setTitle(replies.noPerm.title)
       .setColor(replies.noPerm.color);

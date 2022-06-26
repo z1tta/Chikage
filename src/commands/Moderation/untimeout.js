@@ -5,8 +5,8 @@ const replies = require("../../../replies/embedsReplies.json");
 module.exports = {
   name: "untimeout",
   description: "Removes a member timeout",
-  usage: "untimeout (reason)",
-  run: async (client, message, args) => {
+  usage: "untimeout [member] (reason)",
+  run: async (client, message, args, cooldown) => {
     const noPerm = new MessageEmbed()
       .setTitle(replies.noPerm.title)
       .setColor(replies.noPerm.color);
@@ -32,7 +32,7 @@ module.exports = {
       return message.channel.send({ embeds: [userNotInTimeout] });
     let reason = "";
     args.forEach((arg) => {
-      if (arg !== args[0] && arg !== args[1]) reason = reason + arg + " ";
+      if (arg !== args[0]) reason = reason + arg + " ";
     });
     await user.timeout(0, reason);
     const successUntimeout = new MessageEmbed()

@@ -6,7 +6,11 @@ module.exports = {
   name: "setcooldown",
   description: "Set the cooldown for the commands",
   usage: "setcooldown [duration]",
-  run: async (client, message, args) => {
+  run: async (client, message, args, cooldown) => {
+    const cooldownIsSet = new MessageEmbed()
+      .setTitle(replies.cooldownIsSet.title)
+      .setColor(replies.cooldownIsSet.color);
+    if (cooldown) return message.channel.send({ embeds: [cooldownIsSet] });
     const durationMissing = new MessageEmbed()
       .setTitle(replies.durationMissing.title)
       .setColor(replies.durationMissing.color);

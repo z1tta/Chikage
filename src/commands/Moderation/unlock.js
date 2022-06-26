@@ -5,7 +5,7 @@ module.exports = {
   name: "unlock",
   description: "Unlocks the channel<",
   usage: "unlock",
-  run: async (client, message, args) => {
+  run: async (client, message, args, cooldown) => {
     const noPerm = new MessageEmbed()
       .setTitle(replies.noPerm.title)
       .setColor(replies.noPerm.color);
