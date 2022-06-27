@@ -9,10 +9,10 @@ module.exports = {
     const botAdmin = await new Promise((resolve, reject) =>
       client.db.get(
         `SELECT * FROM "BotAdmins" WHERE id = "${message.member.id}"`,
-        (err, row) => (err ? reject(err) : resolve(row))
+        (err, row) => (err ? reject(err) : resolve(row.id))
       )
     );
-    if (botAdmin.owner !== "true")
+    if (!botAdmin)
       return console.log(
         `${message.author.tag}, (${message.author.id}) à essayé d'éxécuter la commande eval depuis le serveur ${message.guild.name} (${message.guild.id})`
       );
