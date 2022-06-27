@@ -7,6 +7,13 @@ module.exports = {
   usage:
     "setstatus [online || idle || invisible || dnd] (competing || playing || listening || watching) (activityname)",
   run: async (client, message, args, cooldown) => {
+    const botAdmin = await new Promise((resolve, reject) =>
+      client.db.get(
+        `SELECT * FROM "BotAdmins" WHERE id = "${message.member.id}"`,
+        (err, row) => (err ? reject(err) : resolve(row.id))
+      )
+    );
+    if (!botAdmin) return;
     const statusNotIndicate = new MessageEmbed()
       .setTitle(replies.statusNotMentionned.title)
       .setColor(replies.statusNotMentionned.color);

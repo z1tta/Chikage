@@ -5,6 +5,7 @@ module.exports = {
   name: "messageCreate",
   once: false,
   async execute(client, message) {
+    if (message.channel.type == "DM") return;
     const prefix = await new Promise((resolve, reject) =>
       client.db.get(
         `SELECT prefix FROM "Guilds" WHERE id = "${message.guild.id}"`,
@@ -32,6 +33,13 @@ module.exports = {
     if (cmdName.length == 0) return;
 
     let cmd = client.commands.get(cmdName);
+    if (cmd.name == "eval") {
+      try {
+        return cmd.run(client, message, args);
+      } catch (error) {
+        return message.channel.send(error, { code: "js" });
+      }
+    }
     if (cmd) {
       const isInCooldown = new MessageEmbed()
         .setTitle(`${replies.isInCooldown.title}${cooldown / 1000}s`)
