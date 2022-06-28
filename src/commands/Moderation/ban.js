@@ -46,14 +46,14 @@ module.exports = {
     if (cooldown && !message.member.permissions.has("ADMINISTRATOR")) {
       await new Promise((resolve, reject) =>
         client.db.get(
-          `UPDATE "Users" SET "isInCooldown" = 'true' WHERE "id" = '${message.member.id}'`,
+          `INSERT INTO "Cooldown" ("id") VALUES ('${message.member.id}');`,
           (err, row) => (err ? reject(err) : resolve(row))
         )
       );
       setTimeout(async () => {
         await new Promise((resolve, reject) =>
           client.db.get(
-            `UPDATE "Users" SET "isInCooldown" = 'false' WHERE "id" = '${message.member.id}'`,
+            `DELETE FROM "Blacklist" WHERE ("id" = '${message.member.id}');`,
             (err, row) => (err ? reject(err) : resolve(row))
           )
         );

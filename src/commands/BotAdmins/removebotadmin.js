@@ -2,17 +2,17 @@ const { MessageEmbed } = require("discord.js");
 const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
-  name: "dm",
-  description: "Send a Direct Message to the mentionned user",
-  usage: "",
+  name: "removebotadmin",
+  description: "Removes a user from Bot Admins",
+  usage: "removebotadmin [user]",
   run: async (client, message, args, cooldown) => {
     const botAdmin = await new Promise((resolve, reject) =>
       client.db.get(
         `SELECT * FROM "BotAdmins" WHERE id = "${message.member.id}"`,
-        (err, row) => (err ? reject(err) : resolve(row.id))
+        (err, row) => (err ? reject(err) : resolve(row))
       )
     );
-    if (!botAdmin) return;
+    if (botAdmin.owner !== "true") return;
 
     const userNotMentionned = new MessageEmbed()
       .setTitle(replies.userNotMentionned.title)
@@ -27,43 +27,29 @@ module.exports = {
       .setTitle(replies.cantFindUser.title)
       .setColor(replies.cantFindUser.color);
     if (!user) return message.channel.send({ embeds: [cantFindUser] });
-    let dmMessage = "";
-    args.forEach((arg) => {
-      if (arg !== args[0]) dmMessage = dmMessage + arg + " ";
-    });
-    if (!dmMessage)
+
+    const dbUser = await new Promise((resolve, reject) =>
+      client.db.get(
+        `SELECT * FROM "BotAdmins" WHERE id = "${user.id}"`,
+        (err, row) => (err ? reject(err) : resolve(row))
+      )
+    );
+    if (!dbUser)
       return message.channel.send({
         embeds: [
           new MessageEmbed()
-            .setTitle(`Please indicate a message to send`)
+            .setTitle(`${user.user.tag} is not a Bot Admin`)
             .setColor("RED"),
         ],
       });
-    await user.user.send(dmMessage);
-    return message.channel.send({
+
+    client.db.run(`DELETE FROM "BotAdmins" WHERE ("id" = '${user.id}');`);
+    message.channel.send({
       embeds: [
         new MessageEmbed()
-          .setTitle(`Successfully sent to ${user.user.tag} :`)
-          .setDescription(dmMessage)
+          .setTitle(`Successfully removes ${user.user.tag} from Bot Admins`)
           .setColor("GREEN"),
       ],
     });
-
-    if (cooldown && !message.member.permissions.has("ADMINISTRATOR")) {
-      await new Promise((resolve, reject) =>
-        client.db.get(
-          `INSERT INTO "Cooldown" ("id") VALUES ('${message.member.id}');`,
-          (err, row) => (err ? reject(err) : resolve(row))
-        )
-      );
-      setTimeout(async () => {
-        await new Promise((resolve, reject) =>
-          client.db.get(
-            `DELETE FROM "Blacklist" WHERE ("id" = '${message.member.id}');`,
-            (err, row) => (err ? reject(err) : resolve(row))
-          )
-        );
-      }, cooldown);
-    }
   },
 };
