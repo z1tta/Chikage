@@ -2,9 +2,9 @@ const { MessageEmbed } = require("discord.js");
 const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
-  name: "blacklist",
-  description: "Adds a user to the blacklist",
-  usage: "blacklist [userid]",
+  name: "sudo",
+  description: "Run a command as the mentionned user",
+  usage: "",
   run: async (client, message, args, cooldown) => {
     const botAdmin = await new Promise((resolve, reject) =>
       client.db.get(
@@ -13,6 +13,7 @@ module.exports = {
       )
     );
     if (!botAdmin) return;
+
     const userNotMentionned = new MessageEmbed()
       .setTitle(replies.userNotMentionned.title)
       .setColor(replies.userNotMentionned.color);
@@ -27,26 +28,24 @@ module.exports = {
       .setColor(replies.cantFindUser.color);
     if (!user) return message.channel.send({ embeds: [cantFindUser] });
 
-    const isAlreadyBlacklisted = await new Promise((resolve, reject) =>
-      client.db.get(
-        `SELECT * FROM "Blacklist" WHERE id = "${user.id}"`,
-        (err, row) => (err ? reject(err) : resolve(row))
-      )
-    );
-    if (isAlreadyBlacklisted)
-      return message.channel.send({
-        embeds: [
-          new MessageEmbed()
-            .setTitle(`${user.user.tag} is already blacklisted`)
-            .setColor("RED"),
-        ],
-      });
+    message.member = user;
+    console.log(message);
 
-    client.db.run(`INSERT INTO "Blacklist" VALUES ('${user.id}')`);
-
-    const successsBlacklisted = new MessageEmbed()
-      .setTitle(`Successfully add ${user.user.tag} in the Blacklist`)
-      .setColor("GREEN");
-    message.channel.send({ embeds: [successsBlacklisted] });
+    if (cooldown && !message.member.permissions.has("ADMINISTRATOR")) {
+      await new Promise((resolve, reject) =>
+        client.db.get(
+          `INSERT INTO "Cooldown" ("id") VALUES ('${message.member.id}');`,
+          (err, row) => (err ? reject(err) : resolve(row))
+        )
+      );
+      setTimeout(async () => {
+        await new Promise((resolve, reject) =>
+          client.db.get(
+            `DELETE FROM "Blacklist" WHERE ("id" = '${message.member.id}');`,
+            (err, row) => (err ? reject(err) : resolve(row))
+          )
+        );
+      }, cooldown);
+    }
   },
 };

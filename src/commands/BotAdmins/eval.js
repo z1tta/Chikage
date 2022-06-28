@@ -33,7 +33,7 @@ module.exports = {
         return false;
       return message.channel.send(`\`\`\`js\n${cleanCode.toString()}\`\`\``);
     } catch (error) {
-      message.channel.send({ content: error, code: "js" });
+      message.channel.send(`\`\`\`js\n${error}\`\`\``);
     }
   },
 };

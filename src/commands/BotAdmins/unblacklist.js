@@ -2,9 +2,9 @@ const { MessageEmbed } = require("discord.js");
 const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
-  name: "blacklist",
-  description: "Adds a user to the blacklist",
-  usage: "blacklist [userid]",
+  name: "unblacklist",
+  description: "Removes a user to the blacklist",
+  usage: "unblacklist [user]",
   run: async (client, message, args, cooldown) => {
     const botAdmin = await new Promise((resolve, reject) =>
       client.db.get(
@@ -33,19 +33,19 @@ module.exports = {
         (err, row) => (err ? reject(err) : resolve(row))
       )
     );
-    if (isAlreadyBlacklisted)
+    if (!isAlreadyBlacklisted)
       return message.channel.send({
         embeds: [
           new MessageEmbed()
-            .setTitle(`${user.user.tag} is already blacklisted`)
+            .setTitle(`${user.user.tag} is not blacklisted`)
             .setColor("RED"),
         ],
       });
 
-    client.db.run(`INSERT INTO "Blacklist" VALUES ('${user.id}')`);
+    client.db.run(`DELETE FROM "Blacklist" WHERE ("id" = '${user.id}')`);
 
     const successsBlacklisted = new MessageEmbed()
-      .setTitle(`Successfully add ${user.user.tag} in the Blacklist`)
+      .setTitle(`Successfully remove ${user.user.tag} in the Blacklist`)
       .setColor("GREEN");
     message.channel.send({ embeds: [successsBlacklisted] });
   },

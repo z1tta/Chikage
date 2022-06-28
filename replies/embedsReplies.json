@@ -118,5 +118,13 @@
   "statusNotMentionned": {
     "title": "Please indicate a valid status for the bot",
     "color": "RED"
+  },
+  "channelNotMentionned": {
+    "title": "Please mention a valid channel",
+    "color": "RED"
+  },
+  "cantFindChannel": {
+    "title": "I can't find this channel",
+    "color": "RED"
   }
 }
