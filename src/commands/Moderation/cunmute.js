@@ -4,9 +4,10 @@ const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
   name: "cunmute",
+  category: "Moderation",
   description: "Unmutes a member in the current channel",
   usage: "cunmute [member] (reason)",
-  run: async (client, message, args, cooldown) => {
+  run: async (client, message, args) => {
     const noPerm = new MessageEmbed()
       .setTitle(replies.noPerm.title)
       .setColor(replies.noPerm.color);
@@ -37,21 +38,5 @@ module.exports = {
       .setDescription(`${replies.successCunmute.description}${reason}`)
       .setColor(replies.successCunmute.color);
     await message.channel.send({ embeds: [successCunmute] });
-    if (cooldown && !message.member.permissions.has("ADMINISTRATOR")) {
-      await new Promise((resolve, reject) =>
-        client.db.get(
-          `INSERT INTO "Cooldown" ("id") VALUES ('${message.member.id}');`,
-          (err, row) => (err ? reject(err) : resolve(row))
-        )
-      );
-      setTimeout(async () => {
-        await new Promise((resolve, reject) =>
-          client.db.get(
-            `DELETE FROM "Blacklist" WHERE ("id" = '${message.member.id}');`,
-            (err, row) => (err ? reject(err) : resolve(row))
-          )
-        );
-      }, cooldown);
-    }
   },
 };

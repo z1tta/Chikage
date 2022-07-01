@@ -3,10 +3,11 @@ const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
   name: "setstatus",
+  category: "BotAdmins",
   description: "Sets the bot's status",
   usage:
     "setstatus [online || idle || invisible || dnd] (competing || playing || listening || watching) (activityname)",
-  run: async (client, message, args, cooldown) => {
+  run: async (client, message, args) => {
     const botAdmin = await new Promise((resolve, reject) =>
       client.db.get(
         `SELECT * FROM "BotAdmins" WHERE id = "${message.member.id}"`,
@@ -85,22 +86,6 @@ module.exports = {
             .setColor("GREEN"),
         ],
       });
-    }
-    if (cooldown && !message.member.permissions.has("ADMINISTRATOR")) {
-      await new Promise((resolve, reject) =>
-        client.db.get(
-          `INSERT INTO "Cooldown" ("id") VALUES ('${message.member.id}');`,
-          (err, row) => (err ? reject(err) : resolve(row))
-        )
-      );
-      setTimeout(async () => {
-        await new Promise((resolve, reject) =>
-          client.db.get(
-            `DELETE FROM "Blacklist" WHERE ("id" = '${message.member.id}');`,
-            (err, row) => (err ? reject(err) : resolve(row))
-          )
-        );
-      }, cooldown);
     }
   },
 };

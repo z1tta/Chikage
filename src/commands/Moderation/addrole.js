@@ -3,9 +3,10 @@ const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
   name: "addrole",
+  category: "Moderation",
   description: "Adds a role from a member",
   usage: "addrole [role] [member]",
-  run: async (client, message, args, cooldown) => {
+  run: async (client, message, args) => {
     const noPerm = new MessageEmbed()
       .setTitle(replies.noPerm.title)
       .setColor(replies.noPerm.color);
@@ -23,6 +24,10 @@ module.exports = {
     const role = message.guild.roles.cache.get(
       args[0].split("<@&")[1].split(">")[0]
     );
+    const cantFindRole = new MessageEmbed()
+      .setTitle(replies.cantFindRole.title)
+      .setColor(replies.cantFindRole.color);
+    if (!role) return message.channel.send({ embed: [cantFindRole] });
     if (!args[1]) return message.channel.send({ embeds: [userNotMentionned] });
     if (!args[1].startsWith("<@") && !args[0].endsWith(">"))
       return message.channel.send({ embeds: [userNotMentionned] });
@@ -42,21 +47,5 @@ module.exports = {
       .setDescription(`${role}${replies.successAddRole.description}${user}`)
       .setColor(replies.successAddRole.color);
     await message.channel.send({ embeds: [successRoleAdd] });
-    if (cooldown && !message.member.permissions.has("ADMINISTRATOR")) {
-      await new Promise((resolve, reject) =>
-        client.db.get(
-          `INSERT INTO "Cooldown" ("id") VALUES ('${message.member.id}');`,
-          (err, row) => (err ? reject(err) : resolve(row))
-        )
-      );
-      setTimeout(async () => {
-        await new Promise((resolve, reject) =>
-          client.db.get(
-            `DELETE FROM "Blacklist" WHERE ("id" = '${message.member.id}');`,
-            (err, row) => (err ? reject(err) : resolve(row))
-          )
-        );
-      }, cooldown);
-    }
   },
 };

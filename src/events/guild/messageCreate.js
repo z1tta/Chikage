@@ -6,6 +6,30 @@ module.exports = {
   once: false,
   async execute(client, message) {
     if (message.channel.type == "DM") return;
+    const afkMembers = await new Promise((resolve, reject) =>
+      client.db.all(`SELECT * FROM "AFK"`, (err, rows) =>
+        err ? reject(err) : resolve(rows)
+      )
+    );
+    afkMembers.forEach((member) => {
+      if (message.content.includes(`<@${member.userid}>`)) {
+        if (member.reason == "No reason")
+          return message.channel.send({
+            embeds: [
+              new MessageEmbed().setTitle(`This user is AFK`).setColor("RED"),
+            ],
+          });
+        else
+          return message.channel.send({
+            embeds: [
+              new MessageEmbed()
+                .setTitle(`This user is AFK :`)
+                .setDescription(member.reason)
+                .setColor("RED"),
+            ],
+          });
+      }
+    });
     const blacklisted = await new Promise((resolve, reject) =>
       client.db.get(
         `SELECT * FROM "Blacklist" WHERE id = "${message.member.id}"`,
@@ -21,18 +45,6 @@ module.exports = {
     );
     if (message.author.bot) return;
     if (!message.content.startsWith(prefix)) return;
-    const cooldown = await new Promise((resolve, reject) =>
-      client.db.get(
-        `SELECT "cooldown" FROM "Guilds" WHERE id = "${message.guild.id}"`,
-        (err, row) => (err ? reject(err) : resolve(row.cooldown))
-      )
-    );
-    const memberInCooldown = await new Promise((resolve, reject) =>
-      client.db.get(
-        `SELECT * FROM "Cooldown" WHERE id = "${message.member.id}"`,
-        (err, row) => (err ? reject(err) : resolve(row))
-      )
-    );
 
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const cmdName = args.shift().toLowerCase();
@@ -41,12 +53,7 @@ module.exports = {
 
     let cmd = client.commands.get(cmdName);
     if (cmd) {
-      const isInCooldown = new MessageEmbed()
-        .setTitle(`${replies.isInCooldown.title}${cooldown / 1000}s`)
-        .setColor(replies.isInCooldown.color);
-      if (memberInCooldown)
-        return message.channel.send({ embeds: [isInCooldown] });
-      cmd.run(client, message, args, cooldown);
+      cmd.run(client, message, args);
     }
   },
 };

@@ -3,9 +3,10 @@ const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
   name: "removerole",
+  category: "Moderation",
   description: "Removes a role from a member",
   usage: "removerole [role] [member]",
-  run: async (client, message, args, cooldown) => {
+  run: async (client, message, args) => {
     const noPerm = new MessageEmbed()
       .setTitle(replies.noPerm.title)
       .setColor(replies.noPerm.color);
@@ -42,21 +43,5 @@ module.exports = {
       .setDescription(`${role}${replies.successRemoveRole.description}${user}`)
       .setColor(replies.successRemoveRole.color);
     await message.channel.send({ embeds: [successRoleRemove] });
-    if (cooldown && !message.member.permissions.has("ADMINISTRATOR")) {
-      await new Promise((resolve, reject) =>
-        client.db.get(
-          `INSERT INTO "Cooldown" ("id") VALUES ('${message.member.id}');`,
-          (err, row) => (err ? reject(err) : resolve(row))
-        )
-      );
-      setTimeout(async () => {
-        await new Promise((resolve, reject) =>
-          client.db.get(
-            `DELETE FROM "Blacklist" WHERE ("id" = '${message.member.id}');`,
-            (err, row) => (err ? reject(err) : resolve(row))
-          )
-        );
-      }, cooldown);
-    }
   },
 };

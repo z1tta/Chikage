@@ -3,9 +3,10 @@ const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
   name: "createrole",
+  category: "Moderation",
   description: "Creates a role",
   usage: "createrole [rolename]",
-  run: async (client, message, args, cooldown) => {
+  run: async (client, message, args) => {
     const noPerm = new MessageEmbed()
       .setTitle(replies.noPerm.title)
       .setColor(replies.noPerm.color);
@@ -24,21 +25,5 @@ module.exports = {
       .setDescription(`${role}`)
       .setColor(replies.successCreateRole.color);
     await message.channel.send({ embeds: [successCreateRole] });
-    if (cooldown && !message.member.permissions.has("ADMINISTRATOR")) {
-      await new Promise((resolve, reject) =>
-        client.db.get(
-          `INSERT INTO "Cooldown" ("id") VALUES ('${message.member.id}');`,
-          (err, row) => (err ? reject(err) : resolve(row))
-        )
-      );
-      setTimeout(async () => {
-        await new Promise((resolve, reject) =>
-          client.db.get(
-            `DELETE FROM "Cooldown" WHERE ("id" = '${message.member.id}');`,
-            (err, row) => (err ? reject(err) : resolve(row))
-          )
-        );
-      }, cooldown);
-    }
   },
 };

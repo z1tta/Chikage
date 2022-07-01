@@ -4,9 +4,10 @@ const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
   name: "timeout",
+  category: "Moderation",
   description: "Sends a member into a timeout",
   usage: "timeout [member] [duration] (reason)",
-  run: async (client, message, args, cooldown) => {
+  run: async (client, message, args) => {
     const noPerm = new MessageEmbed()
       .setTitle(replies.noPerm.title)
       .setColor(replies.noPerm.color);
@@ -44,21 +45,5 @@ module.exports = {
       .setDescription(`${replies.successTimeout.description}${reason}`)
       .setColor(replies.successTimeout.color);
     await message.channel.send({ embeds: [successTimeout] });
-    if (cooldown && !message.member.permissions.has("ADMINISTRATOR")) {
-      await new Promise((resolve, reject) =>
-        client.db.get(
-          `INSERT INTO "Cooldown" ("id") VALUES ('${message.member.id}');`,
-          (err, row) => (err ? reject(err) : resolve(row))
-        )
-      );
-      setTimeout(async () => {
-        await new Promise((resolve, reject) =>
-          client.db.get(
-            `DELETE FROM "Blacklist" WHERE ("id" = '${message.member.id}');`,
-            (err, row) => (err ? reject(err) : resolve(row))
-          )
-        );
-      }, cooldown);
-    }
   },
 };

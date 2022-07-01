@@ -3,9 +3,15 @@ const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
   name: "delghost",
+  category: "Welcomer",
   description: "Deletes a ghost ping set to a channel when a member join",
   usage: "delghost [channel]",
-  run: async (client, message, args, cooldown) => {
+  run: async (client, message, args) => {
+    const noPerm = new MessageEmbed()
+      .setTitle(replies.noPerm.title)
+      .setColor(replies.noPerm.color);
+    if (!message.member.permissions.has("ADMINISTRATOR"))
+      return message.channel.send({ embeds: [noPerm] });
     const channelNotMentionned = new MessageEmbed()
       .setTitle(replies.channelNotMentionned.title)
       .setColor(replies.channelNotMentionned.color);
@@ -21,7 +27,7 @@ module.exports = {
       .setColor(replies.cantFindChannel.color);
     if (!channel) return message.channel.send({ embeds: [cantFindChannel] });
 
-    client.db.run(`DELETE FROM "Ghosts" WHERE ("id" = '${channel.id}')`);
+    client.db.run(`DELETE FROM "Ghosts" WHERE ("channelid" = '${channel.id}')`);
 
     message.channel.send({
       embeds: [
@@ -30,22 +36,5 @@ module.exports = {
           .setColor("GREEN"),
       ],
     });
-
-    if (cooldown && !message.member.permissions.has("ADMINISTRATOR")) {
-      await new Promise((resolve, reject) =>
-        client.db.get(
-          `INSERT INTO "Cooldown" ("id") VALUES ('${message.member.id}');`,
-          (err, row) => (err ? reject(err) : resolve(row))
-        )
-      );
-      setTimeout(async () => {
-        await new Promise((resolve, reject) =>
-          client.db.get(
-            `DELETE FROM "Blacklist" WHERE ("id" = '${message.member.id}');`,
-            (err, row) => (err ? reject(err) : resolve(row))
-          )
-        );
-      }, cooldown);
-    }
   },
 };

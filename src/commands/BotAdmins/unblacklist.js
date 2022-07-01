@@ -3,9 +3,10 @@ const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
   name: "unblacklist",
+  category: "BotAdmins",
   description: "Removes a user to the blacklist",
   usage: "unblacklist [user]",
-  run: async (client, message, args, cooldown) => {
+  run: async (client, message, args) => {
     const botAdmin = await new Promise((resolve, reject) =>
       client.db.get(
         `SELECT * FROM "BotAdmins" WHERE id = "${message.member.id}"`,

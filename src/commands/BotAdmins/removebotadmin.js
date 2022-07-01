@@ -3,9 +3,10 @@ const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
   name: "removebotadmin",
+  category: "BotAdmins",
   description: "Removes a user from Bot Admins",
   usage: "removebotadmin [user]",
-  run: async (client, message, args, cooldown) => {
+  run: async (client, message, args) => {
     const botAdmin = await new Promise((resolve, reject) =>
       client.db.get(
         `SELECT * FROM "BotAdmins" WHERE id = "${message.member.id}"`,

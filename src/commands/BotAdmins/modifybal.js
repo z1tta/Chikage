@@ -2,19 +2,18 @@ const { MessageEmbed } = require("discord.js");
 const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
-  name: "addbotadmin",
+  name: "modifybal",
   category: "BotAdmins",
-  description: "Set a user as a Bot Admin",
-  usage: "addbotadmin [user]",
+  description: "Set the mentioned user's balance",
+  usage: "modifybal [user] [amount]",
   run: async (client, message, args) => {
     const botAdmin = await new Promise((resolve, reject) =>
       client.db.get(
         `SELECT * FROM "BotAdmins" WHERE id = "${message.member.id}"`,
-        (err, row) => (err ? reject(err) : resolve(row))
+        (err, row) => (err ? reject(err) : resolve(row.id))
       )
     );
-    if (botAdmin.owner !== "true") return;
-
+    if (!botAdmin) return;
     const userNotMentionned = new MessageEmbed()
       .setTitle(replies.userNotMentionned.title)
       .setColor(replies.userNotMentionned.color);
@@ -28,28 +27,45 @@ module.exports = {
       .setTitle(replies.cantFindUser.title)
       .setColor(replies.cantFindUser.color);
     if (!user) return message.channel.send({ embeds: [cantFindUser] });
-
-    const dbUser = await new Promise((resolve, reject) =>
+    const userbalance = await new Promise((resolve, reject) =>
       client.db.get(
-        `SELECT * FROM "BotAdmins" WHERE id = "${user.id}"`,
+        `SELECT * FROM "Balance" WHERE "userid" = '${user.id}';`,
         (err, row) => (err ? reject(err) : resolve(row))
       )
     );
-    if (dbUser)
+    if (!userbalance)
       return message.channel.send({
         embeds: [
           new MessageEmbed()
-            .setTitle(`${user.user.tag} is already a Bot Admin`)
+            .setTitle(`I can't find the user's balance`)
             .setColor("RED"),
         ],
       });
-
-    client.db.run(`INSERT INTO "BotAdmins" (id) VALUES ('${user.id}');`);
+    const amount = parseInt(args[1]);
+    if (!amount)
+      return message.channel.send({
+        embeds: [
+          new MessageEmbed()
+            .setTitle(`Please indicate an amount`)
+            .setColor("RED"),
+        ],
+      });
+    if (isNaN(amount))
+      return message.channel.send({
+        embeds: [
+          new MessageEmbed()
+            .setTitle(`Please indicate a valid amount`)
+            .setColor("RED"),
+        ],
+      });
+    client.db.run(
+      `UPDATE "Balance" SET "balance" = '${amount}' WHERE "userid" = '${user.id}';`
+    );
     message.channel.send({
       embeds: [
         new MessageEmbed()
-          .setTitle(`Successfully set ${user.user.tag} as Bot Admin`)
-          .setColor("GREEN"),
+          .setTitle(`Successfully set ${user.user.tag}'s balance to :`)
+          .setDescription(`\`${amount}\``),
       ],
     });
   },

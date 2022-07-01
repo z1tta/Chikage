@@ -85,26 +85,6 @@
     "title": "Successfully deleted role :",
     "color": "GREEN"
   },
-  "isInCooldown": {
-    "title": "You're in cooldown, please wait ",
-    "color": "RED"
-  },
-  "successSetCooldown": {
-    "title": "Successfully set cooldown :",
-    "color": "GREEN"
-  },
-  "successRemoveCooldown": {
-    "title": "Successfully removed cooldown :",
-    "color": "GREEN"
-  },
-  "cooldownIsSet": {
-    "title": "The cooldown is already set",
-    "color": "RED"
-  },
-  "cooldownIsNotSet": {
-    "title": "The cooldown is not set",
-    "color": "RED"
-  },
   "successCmute": {
     "title": "Successfully muted : ",
     "description": "Reason: ",
@@ -125,6 +105,10 @@
   },
   "cantFindChannel": {
     "title": "I can't find this channel",
+    "color": "RED"
+  },
+  "cantFindRole": {
+    "title": "I can't find this role",
     "color": "RED"
   }
 }

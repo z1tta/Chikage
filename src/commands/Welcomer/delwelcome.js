@@ -2,10 +2,10 @@ const { MessageEmbed } = require("discord.js");
 const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
-  name: "addghost",
+  name: "delwelcome",
   category: "Welcomer",
-  description: "Adds a ghost ping to a channel when a member join",
-  usage: "addghost [channel]",
+  description: "Removes a message in the mentionned channel when a user join",
+  usage: "addwelcome [channel] []",
   run: async (client, message, args) => {
     const noPerm = new MessageEmbed()
       .setTitle(replies.noPerm.title)
@@ -27,14 +27,29 @@ module.exports = {
       .setColor(replies.cantFindChannel.color);
     if (!channel) return message.channel.send({ embeds: [cantFindChannel] });
 
+    if (!args[1])
+      return message.channel.send({
+        embeds: [
+          new MessageEmbed()
+            .setTitle("Please enter the message you want to remove")
+            .setColor("RED"),
+        ],
+      });
+
+    let wMessage = "";
+    args.forEach((arg) => {
+      if (arg !== args[0]) wMessage = wMessage + arg + " ";
+    });
+
     client.db.run(
-      `INSERT INTO "Ghosts" ("guildid", "channelid") VALUES ('${message.guild.id}', '${channel.id}')`
+      `DELETE FROM "WelcomeMessages" WHERE ("guildid" = '${message.guild.id}' AND "channelid" = '${channel.id}' AND "message" = '${wMessage}');`
     );
 
     message.channel.send({
       embeds: [
         new MessageEmbed()
-          .setTitle(`Successfully set a ghost ping in #${channel.name}`)
+          .setTitle(`Successfully removed in #${channel.name} :`)
+          .setDescription(wMessage)
           .setColor("GREEN"),
       ],
     });

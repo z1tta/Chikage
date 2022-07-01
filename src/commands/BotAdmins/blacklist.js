@@ -3,9 +3,10 @@ const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
   name: "blacklist",
+  category: "BotAdmins",
   description: "Adds a user to the blacklist",
   usage: "blacklist [userid]",
-  run: async (client, message, args, cooldown) => {
+  run: async (client, message, args) => {
     const botAdmin = await new Promise((resolve, reject) =>
       client.db.get(
         `SELECT * FROM "BotAdmins" WHERE id = "${message.member.id}"`,
@@ -26,6 +27,21 @@ module.exports = {
       .setTitle(replies.cantFindUser.title)
       .setColor(replies.cantFindUser.color);
     if (!user) return message.channel.send({ embeds: [cantFindUser] });
+
+    const userAdmin = await new Promise((resolve, reject) =>
+      client.db.get(
+        `SELECT * FROM "BotAdmins" WHERE id = "${user.id}"`,
+        (err, row) => (err ? reject(err) : resolve(row.id))
+      )
+    );
+    if (userAdmin)
+      return message.channel.send({
+        embeds: [
+          new MessageEmbed()
+            .setTitle(`This user can't be blacklisted`)
+            .setColor("RED"),
+        ],
+      });
 
     const isAlreadyBlacklisted = await new Promise((resolve, reject) =>
       client.db.get(
