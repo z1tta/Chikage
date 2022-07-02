@@ -3,7 +3,7 @@ const ms = require("ms");
 const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
-  name: "cmute",
+  name: ["cmute"],
   category: "Moderation",
   description: "Mutes the member in the current channel",
   usage: "cmute [member] [duration] (reason)",

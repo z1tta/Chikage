@@ -3,7 +3,7 @@ const ms = require("ms");
 const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
-  name: "prefix",
+  name: ["prefix"],
   category: "Moderation",
   description: "Set the bot prefix",
   usage: "prefix [newprefix]",

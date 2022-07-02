@@ -2,7 +2,7 @@ const { MessageEmbed } = require("discord.js");
 const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
-  name: "removebotadmin",
+  name: ["removebotadmin"],
   category: "BotAdmins",
   description: "Removes a user from Bot Admins",
   usage: "removebotadmin [user]",

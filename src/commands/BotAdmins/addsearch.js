@@ -3,7 +3,7 @@ const ms = require("ms");
 const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
-  name: "addsearch",
+  name: ["addsearch"],
   category: "BotAdmins",
   description: "Add a custom search",
   usage: "addsearch [name] [gain] [description]",

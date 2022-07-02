@@ -2,7 +2,7 @@ const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
 const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
-  name: "dropcurrency",
+  name: ["dropcurrency", "drop"],
   category: "BotAdmins",
   description:
     "Drop an amount of money in the channel, the first member who will click on the button will receive this amount",

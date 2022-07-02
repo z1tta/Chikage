@@ -2,7 +2,7 @@ const { MessageEmbed } = require("discord.js");
 const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
-  name: "deleterole",
+  name: ["deleterole"],
   category: "Moderation",
   description: "Deletes a role",
   usage: "deleterole [role]",

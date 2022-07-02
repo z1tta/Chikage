@@ -2,7 +2,7 @@ const { MessageEmbed } = require("discord.js");
 const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
-  name: "blacklist",
+  name: ["blacklist", "bl"],
   category: "BotAdmins",
   description: "Adds a user to the blacklist",
   usage: "blacklist [userid]",
@@ -18,11 +18,7 @@ module.exports = {
       .setTitle(replies.userNotMentionned.title)
       .setColor(replies.userNotMentionned.color);
     if (!args[0]) return message.channel.send({ embeds: [userNotMentionned] });
-    if (!args[0].startsWith("<@") && !args[0].endsWith(">"))
-      return message.channel.send({ embeds: [userNotMentionned] });
-    const user = message.guild.members.cache.get(
-      args[0].split("<@")[1].split(">")[0]
-    );
+    const user = message.guild.members.cache.get(args[0]);
     const cantFindUser = new MessageEmbed()
       .setTitle(replies.cantFindUser.title)
       .setColor(replies.cantFindUser.color);
@@ -31,7 +27,7 @@ module.exports = {
     const userAdmin = await new Promise((resolve, reject) =>
       client.db.get(
         `SELECT * FROM "BotAdmins" WHERE id = "${user.id}"`,
-        (err, row) => (err ? reject(err) : resolve(row.id))
+        (err, row) => (err ? reject(err) : resolve(row))
       )
     );
     if (userAdmin)

@@ -4,7 +4,7 @@ const { readdirSync } = require("fs");
 const categoryList = readdirSync("./src/commands");
 
 module.exports = {
-  name: "help",
+  name: ["help"],
   category: "Misc",
   description: "Sends the help command",
   usage: "help",
@@ -49,19 +49,21 @@ module.exports = {
           `${category}`,
           `${client.commands
             .filter((cmd) => cmd.category === category)
-            .map((cmd) => cmd.name)
+            .map((cmd) => cmd.name[0])
             .join(", ")}`
         );
       });
       message.channel.send({ embeds: [embed] });
     } else {
-      const cmd = client.commands.get(args[0]);
+      const cmd = client.commands
+        .map((cmd) => cmd)
+        .filter((cmd) => cmd.name.includes(args[0]))[0];
       if (!cmd)
         return message.channel.send(
           `\`${args[0]}\` is not a valid command name`
         );
       const embed = new MessageEmbed()
-        .setTitle(cmd.name)
+        .setTitle(cmd.name.join(" | "))
         .setDescription(`\`[required]\` / \`(optional)\``)
         .addFields([
           {

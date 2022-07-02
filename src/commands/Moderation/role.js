@@ -2,10 +2,10 @@ const { MessageEmbed } = require("discord.js");
 const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
-  name: "addrole",
+  name: ["role"],
   category: "Moderation",
-  description: "Adds a role from a member",
-  usage: "addrole [role] [member]",
+  description: "Adds / removes a role from a member",
+  usage: "role [role] [member]",
   run: async (client, message, args) => {
     const noPerm = new MessageEmbed()
       .setTitle(replies.noPerm.title)
@@ -34,18 +34,36 @@ module.exports = {
     const user = message.guild.members.cache.get(
       args[1].split("<@")[1].split(">")[0]
     );
-    try {
-      user.roles.add(role);
-    } catch (err) {
-      const missingHighestRole = new MessageEmbed()
-        .setTitle(replies.missingHighestRole.title)
-        .setColor(replies.missingHighestRole.color);
-      return message.channel.send({ embeds: [missingHighestRole] });
+    if (!message.member.roles.cache.has(role.id)) {
+      try {
+        user.roles.add(role);
+        const successRoleAdd = new MessageEmbed()
+          .setTitle(replies.successAddRole.title)
+          .setDescription(`${role}${replies.successAddRole.description}${user}`)
+          .setColor(replies.successAddRole.color);
+        await message.channel.send({ embeds: [successRoleAdd] });
+      } catch (err) {
+        const missingHighestRole = new MessageEmbed()
+          .setTitle(replies.missingHighestRole.title)
+          .setColor(replies.missingHighestRole.color);
+        return message.channel.send({ embeds: [missingHighestRole] });
+      }
+    } else {
+      try {
+        user.roles.remove(role);
+        const successRoleRemove = new MessageEmbed()
+          .setTitle(replies.successRemoveRole.title)
+          .setDescription(
+            `${role}${replies.successRemoveRole.description}${user}`
+          )
+          .setColor(replies.successRemoveRole.color);
+        await message.channel.send({ embeds: [successRoleRemove] });
+      } catch (err) {
+        const missingHighestRole = new MessageEmbed()
+          .setTitle(replies.missingHighestRole.title)
+          .setColor(replies.missingHighestRole.color);
+        return message.channel.send({ embeds: [missingHighestRole] });
+      }
     }
-    const successRoleAdd = new MessageEmbed()
-      .setTitle(replies.successAddRole.title)
-      .setDescription(`${role}${replies.successAddRole.description}${user}`)
-      .setColor(replies.successAddRole.color);
-    await message.channel.send({ embeds: [successRoleAdd] });
   },
 };

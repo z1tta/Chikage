@@ -2,7 +2,7 @@ const { MessageEmbed } = require("discord.js");
 const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
-  name: "unblacklist",
+  name: ["unblacklist", "unbl"],
   category: "BotAdmins",
   description: "Removes a user to the blacklist",
   usage: "unblacklist [user]",

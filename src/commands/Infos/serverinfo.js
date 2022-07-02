@@ -4,7 +4,7 @@ const ms = require("ms");
 const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
-  name: "serverinfo",
+  name: ["serverinfo", "si"],
   category: "Infos",
   description: "Gets informations about the server",
   usage: "serverinfo",

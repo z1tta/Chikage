@@ -1,17 +1,21 @@
 const { MessageEmbed } = require("discord.js");
+const moment = require("moment");
 const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
-  name: ["delghost"],
-  category: "Welcomer",
-  description: "Deletes a ghost ping set to a channel when a member join",
-  usage: "delghost [channel]",
+  name: ["say"],
+  category: "BotAdmins",
+  description: "Send a message in the mentionned channel",
+  usage: "say [channel] [message]",
   run: async (client, message, args) => {
-    const noPerm = new MessageEmbed()
-      .setTitle(replies.noPerm.title)
-      .setColor(replies.noPerm.color);
-    if (!message.member.permissions.has("ADMINISTRATOR"))
-      return message.channel.send({ embeds: [noPerm] });
+    const botAdmin = await new Promise((resolve, reject) =>
+      client.db.get(
+        `SELECT * FROM "BotAdmins" WHERE id = "${message.member.id}"`,
+        (err, row) => (err ? reject(err) : resolve(row.id))
+      )
+    );
+    if (!botAdmin) return;
+
     const channelNotMentionned = new MessageEmbed()
       .setTitle(replies.channelNotMentionned.title)
       .setColor(replies.channelNotMentionned.color);
@@ -27,14 +31,12 @@ module.exports = {
       .setColor(replies.cantFindChannel.color);
     if (!channel) return message.channel.send({ embeds: [cantFindChannel] });
 
-    client.db.run(`DELETE FROM "Ghosts" WHERE ("channelid" = '${channel.id}')`);
-
-    message.channel.send({
-      embeds: [
-        new MessageEmbed()
-          .setTitle(`Successfully deletes a ghost ping in #${channel.name}`)
-          .setColor("GREEN"),
-      ],
+    let cMessage = "";
+    args.forEach((arg) => {
+      if (arg !== args[0]) cMessage = cMessage + arg + " ";
     });
+
+    channel.send(cMessage);
+    return message.react("✅");
   },
 };

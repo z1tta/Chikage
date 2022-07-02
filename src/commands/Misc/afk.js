@@ -2,7 +2,7 @@ const { MessageEmbed } = require("discord.js");
 const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
-  name: "afk",
+  name: ["afk"],
   category: "Misc",
   description: "Sets your AFK status",
   usage: "afk (reason)",
@@ -26,7 +26,7 @@ module.exports = {
       reason = reason + arg + " ";
     });
     if (reason.length === 0) {
-      reason = "No reason";
+      reason = "AFK";
     }
 
     client.db.run(
@@ -36,8 +36,9 @@ module.exports = {
     message.channel.send({
       embeds: [
         new MessageEmbed()
-          .setTitle(`Successfuly set your AFK status :`)
-          .setDescription(reason)
+          .setDescription(
+            `\`${message.member.user.username}\` I set your AFK: ${reason}`
+          )
           .setColor("GREEN"),
       ],
     });

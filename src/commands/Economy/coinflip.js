@@ -4,10 +4,10 @@ const ms = require("ms");
 const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
-  name: "coinflip",
+  name: ["coinflip", "cf"],
   category: "Economy",
   description: "Play coinflip",
-  usage: "coinflip",
+  usage: "coinflip [heads || tails]",
   run: async (client, message, args) => {
     const isOnCooldown = await new Promise((resolve, reject) =>
       client.db.get(
@@ -23,21 +23,47 @@ module.exports = {
             .setColor("RED"),
         ],
       });
-    const proba = (n) => {
-      return !!n && Math.random() <= n;
-    };
     const userbalance = await new Promise((resolve, reject) =>
       client.db.get(
         `SELECT * FROM "Balance" WHERE "userid" = '${message.member.id}';`,
         (err, row) => (err ? reject(err) : resolve(row))
       )
     );
+    if (!args[0])
+      return message.channel.send({
+        embeds: [
+          new MessageEmbed()
+            .setTitle(`Please indicate \`heads\` or \`tails\``)
+            .setColor("RED"),
+        ],
+      });
+    let userCoin;
+    if (args[0] == "heads") userCoin = 0;
+    else if (args[0] == "tails") userCoin = 1;
+    else
+      return message.channel.send({
+        embeds: [
+          new MessageEmbed()
+            .setTitle(`Please indicate \`heads\` or \`tails\``)
+            .setColor("RED"),
+        ],
+      });
+    const botCoin = Math.round(Math.random());
 
-    const haveWon = proba(0.5);
+    let haveWon;
+    if (userCoin === botCoin) haveWon = true;
+    else haveWon = false;
     if (haveWon) {
       message.channel.send({
         embeds: [
-          new MessageEmbed().setTitle(`🪙 You won 50`).setColor("GREEN"),
+          new MessageEmbed()
+            .setTitle(
+              `🪙 ${botCoin
+                .toString()
+                .replace("0", "Heads")
+                .replace("1", "Tails")}, you won !`
+            )
+            .setColor("GREEN"),
         ],
       });
       client.db.run(
@@ -47,7 +73,16 @@ module.exports = {
       );
     } else
       message.channel.send({
-        embeds: [new MessageEmbed().setTitle(`🪙 You lose`).setColor("RED")],
+        embeds: [
+          new MessageEmbed()
+            .setTitle(
+              `🪙 ${botCoin
+                .toString()
+                .replace("0", "Heads")
+                .replace("1", "Tails")}, you lose`
+            )
+            .setColor("RED"),
+        ],
       });
     client.db.run(
       `INSERT INTO "CoinflipCooldown" VALUES ('${message.member.id}')`

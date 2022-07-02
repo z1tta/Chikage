@@ -4,7 +4,7 @@ const ms = require("ms");
 const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
-  name: "balance",
+  name: ["balance", "bal"],
   category: "Economy",
   description: "Shows your balance",
   usage: "balance",

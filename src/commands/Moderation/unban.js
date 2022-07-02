@@ -2,7 +2,7 @@ const { MessageEmbed } = require("discord.js");
 const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
-  name: "unban",
+  name: ["unban", "ub"],
   category: "Moderation",
   description: "Unban users",
   usage: `unban [userid] (reason)`,

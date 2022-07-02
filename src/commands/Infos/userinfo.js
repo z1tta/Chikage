@@ -3,7 +3,7 @@ const moment = require("moment");
 const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
-  name: "userinfo",
+  name: ["userinfo", "ui"],
   category: "Infos",
   description: "Returns informations about the mentionned user",
   usage: "userinfo [memberid]",

@@ -4,7 +4,7 @@ const ms = require("ms");
 const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
-  name: "give",
+  name: ["give", "share"],
   category: "Economy",
   description: "Give money to the mentionned user",
   usage: "give [user] [amount]",

@@ -13,20 +13,12 @@ module.exports = {
         channel.channelid
       );
       if (guildchannel) {
-        const message = await guildchannel.send(`<@${member.id}>`);
-        await message.delete();
-      }
-    });
-    const welcomeMessages = await new Promise((resolve, reject) =>
-      client.db.all(
-        `SELECT * FROM "WelcomeMessages" WHERE ("guildid" = '${member.guild.id}')`,
-        (err, rows) => (err ? reject(err) : resolve(rows))
-      )
-    );
-    welcomeMessages.forEach(async (wMessage) => {
-      if (wMessage) {
-        const channel = member.guild.channels.cache.get(wMessage.channelid);
-        await channel.send(wMessage.message);
+        const message = await guildchannel.send(
+          `<@${member.id}>\n${channel.message.replace("{user}", member)}`
+        );
+        setTimeout(() => {
+          message.delete();
+        }, channel.duration);
       }
     });
   },

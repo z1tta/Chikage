@@ -2,7 +2,7 @@ const { MessageEmbed } = require("discord.js");
 const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
-  name: "createrole",
+  name: ["createrole"],
   category: "Moderation",
   description: "Creates a role",
   usage: "createrole [rolename]",

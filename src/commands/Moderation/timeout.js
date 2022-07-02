@@ -3,7 +3,7 @@ const ms = require("ms");
 const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
-  name: "timeout",
+  name: ["timeout", "t"],
   category: "Moderation",
   description: "Sends a member into a timeout",
   usage: "timeout [member] [duration] (reason)",

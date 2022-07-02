@@ -4,7 +4,7 @@ const ms = require("ms");
 const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
-  name: "search",
+  name: ["search"],
   category: "Economy",
   description: "Gets an acitivity",
   usage: "search [activityname]",
@@ -43,32 +43,21 @@ module.exports = {
         ],
       });
     const search = searches[Math.floor(Math.random() * searches.length)];
-    let success;
-    const random = Math.round(Math.random());
-    if (random == 1) success = true;
-    else success = false;
     const embed = new MessageEmbed();
-    if (success) {
-      embed
-        .setTitle(`${search.name} successed`)
-        .setDescription(search.description)
-        .setColor("GREEN")
-        .addField("Gain", `${search.gain}`)
-        .addField(
-          "Current balance",
-          `${parseInt(userbalance.balance) + search.gain}`
-        );
-      client.db.run(
-        `UPDATE "Balance" SET "balance" = '${
-          parseInt(userbalance.balance) + search.gain
-        }' WHERE "userid" = '${message.member.id}';`
+    embed
+      .setTitle(`${search.name} successed`)
+      .setDescription(search.description)
+      .setColor("GREEN")
+      .addField("Gain", `${search.gain}`)
+      .addField(
+        "Current balance",
+        `${parseInt(userbalance.balance) + search.gain}`
       );
-    } else {
-      embed
-        .setTitle(`${search.name} failed`)
-        .setDescription(search.description)
-        .setColor("RED");
-    }
+    client.db.run(
+      `UPDATE "Balance" SET "balance" = '${
+        parseInt(userbalance.balance) + search.gain
+      }' WHERE "userid" = '${message.member.id}';`
+    );
     message.channel.send({ embeds: [embed] });
 
     client.db.run(
@@ -79,6 +68,6 @@ module.exports = {
       client.db.run(
         `DELETE FROM "SearchCooldown" WHERE "userid" = '${message.member.id}'`
       );
-    }, ms("30s"));
+    }, ms("0s"));
   },
 };

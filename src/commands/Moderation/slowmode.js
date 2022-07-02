@@ -3,7 +3,7 @@ const ms = require("ms");
 const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
-  name: "slowmode",
+  name: ["slowmode", "sm"],
   category: "Moderation",
   description: "Set the slowmode for the channel (0 to reset)",
   usage: "slowmode [duration]",

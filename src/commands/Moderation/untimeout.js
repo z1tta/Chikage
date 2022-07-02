@@ -3,7 +3,7 @@ const ms = require("ms");
 const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
-  name: "untimeout",
+  name: ["untimeout", "unt"],
   category: "Moderation",
   description: "Removes a member timeout",
   usage: "untimeout [member] (reason)",

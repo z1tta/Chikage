@@ -2,7 +2,7 @@ const { MessageEmbed } = require("discord.js");
 const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
-  name: "unlock",
+  name: ["unlock"],
   category: "Moderation",
   description: "Unlocks the channel<",
   usage: "unlock",
@@ -12,13 +12,11 @@ module.exports = {
       .setColor(replies.noPerm.color);
     if (!message.member.permissions.has("ADMINISTRATOR"))
       return message.channel.send({ embeds: [noPerm] });
-    const roles = message.guild.roles.cache.map((r) => r);
-    roles.forEach(async (role) => {
-      if (!role.permissions.has("ADMINISTRATOR")) {
-        await message.channel.permissionOverwrites.edit(role, {
-          SEND_MESSAGES: true,
-        });
-      }
+    const role = message.guild.roles.cache
+      .map((r) => r)
+      .filter((r) => (r.name = "@everyone"))[0];
+    await message.channel.permissionOverwrites.edit(role, {
+      SEND_MESSAGES: true,
     });
     const successLock = new MessageEmbed()
       .setTitle(replies.successUnlock.title)

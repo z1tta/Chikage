@@ -2,7 +2,7 @@ const { MessageEmbed } = require("discord.js");
 const replies = require("../../../replies/embedsReplies.json");
 
 module.exports = {
-  name: "eval",
+  name: ["eval", "e"],
   category: "BotAdmins",
   description: "Evaluates JS code",
   usage: "eval [code]",
