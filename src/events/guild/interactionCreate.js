@@ -27,19 +27,16 @@ module.exports = {
         )
       );
       if (!dropcurrencybutton) return;
-      client.guilds.cache
-        .get(interaction.guildId)
-        .channels.cache.get(interaction.channelId)
-        .messages.cache.get(interaction.customId)
-        .delete();
       client.db.run(
         `DELETE FROM "DropcurrencyButtons" WHERE "id" = '${interaction.customId}'`
       );
       await interaction.reply({
         embeds: [
-          new MessageEmbed().setDescription(
-            `Successfully added ${dropcurrencybutton.amount} to you balance`
-          ),
+          new MessageEmbed()
+            .setDescription(
+              `Successfully added ${dropcurrencybutton.amount} to you balance`
+            )
+            .setColor("GREEN"),
         ],
         ephemeral: true,
       });
@@ -48,6 +45,17 @@ module.exports = {
           parseInt(userbalance.balance) + parseInt(dropcurrencybutton.amount)
         }' WHERE "userid" = '${interaction.member.id}';`
       );
+      interaction.message.edit({
+        embeds: [
+          new MessageEmbed()
+            .setTitle("Currency drop ended")
+            .setDescription(
+              `${interaction.member} won \`${dropcurrencybutton.amount}\``
+            )
+            .setColor("GREEN"),
+        ],
+        components: [],
+      });
     }
   },
 };

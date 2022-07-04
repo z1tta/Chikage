@@ -68,6 +68,6 @@ module.exports = {
       client.db.run(
         `DELETE FROM "SearchCooldown" WHERE "userid" = '${message.member.id}'`
       );
-    }, ms("0s"));
+    }, ms("30s"));
   },
 };
